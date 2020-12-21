@@ -26,6 +26,8 @@ int main() {
     auto frame = stbi_load(image_path, &originalWidth, &originalHeight, &originChannel,3);
     int idx = evalimage.inference((uint8_t*)frame, originalWidth, originalHeight);
     
+    //stbi_write_png(outputImageFileName, originalWidth, originalHeight, 4, inputImage, 4 * originalWidth);
+    //stbi_image_free(inputImage);
     std::cout<<"##succ## "<<txt[idx]<<std::endl;
     return 0;
 }   
