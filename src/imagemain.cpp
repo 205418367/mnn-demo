@@ -1,12 +1,15 @@
 #include "imagenet.hpp"
 #include <iostream>
 #include <fstream>
-#include <opencv2/opencv.hpp>
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image.h"
+#include "stb_image_write.h"
 
 
 int main() {
     const char* model_path = "../models/imagenet/efficientnet_b0_quan.mnn";
-    const std::string image_path = "../imgs/imagenet/donut.jpg";
+    const char* image_path = "../imgs/imagenet/cls_001.jpg";
     const std::string labels = "../imgs/imagenet/labels.txt";
     
     vector<string> txt;
@@ -17,8 +20,11 @@ int main() {
     }
 
     evalImage evalimage(model_path, 4, 224, 224); 
-    cv::Mat frame = cv::imread(image_path);
-    int idx = evalimage.inference(frame);
+    int originalWidth;
+    int originalHeight;
+    int originChannel;
+    auto frame = stbi_load(image_path, &originalWidth, &originalHeight, &originChannel,3);
+    int idx = evalimage.inference((uint8_t*)frame, originalWidth, originalHeight);
     
     std::cout<<"##succ## "<<txt[idx]<<std::endl;
     return 0;

@@ -31,14 +31,16 @@ evalImage::~evalImage()
    eval->releaseSession(sess_eval);
 }
     
-int evalImage::inference(cv::Mat& img)
+int evalImage::inference(uint8_t* imagedata, int originalWidth, int originalHeight)
 {
-   Mat image;
-   resize(img, image, Size(resize_h, resize_w));
    //eval->resizeTensor(input_tensor, {1, 3, resize_h, resize_w});
    //eval->resizeSession(sess_eval);
+   MNN::CV::Matrix trans;
+   trans.postScale(1.0 / resize_w, 1.0 / resize_h);
+   trans.postScale(originalWidth, originalHeight);
+   pretreat->setMatrix(trans);
    
-   pretreat->convert(image.data, resize_w, resize_h, image.step[0], input_tensor);
+   pretreat->convert(imagedata, originalWidth, originalHeight, 0, input_tensor);
    eval->runSession(sess_eval);
    
    MNN::Tensor tensor_outputs_host(tensor_outputs, tensor_outputs->getDimensionType());

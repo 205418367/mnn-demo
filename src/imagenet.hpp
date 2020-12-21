@@ -1,5 +1,4 @@
 #pragma once
-#include <opencv2/opencv.hpp>
 #include <Interpreter.hpp>
 #include <MNNDefine.h>
 #include <Tensor.hpp>
@@ -10,14 +9,13 @@
 #include <iostream>
 #include <memory>
 
-using namespace cv;
 using namespace std;
 
 class evalImage {
 public:
     evalImage(const char* mnn_path, int num_thread, int in_h, int in_w);
     ~evalImage();
-    int inference(Mat& img);
+    int inference(uint8_t* img, int originalWidth, int originalHeight);
 private:
     shared_ptr<MNN::Interpreter> eval;
     MNN::Session* sess_eval = nullptr;
